@@ -1,0 +1,2 @@
+/Users/maicon/Desktop/Job/Coding/rick_and_morty_wiki/android/app/.cxx/Debug/64503s5h/x86_64/CMakeFiles/edit_cache.dir
+/Users/maicon/Desktop/Job/Coding/rick_and_morty_wiki/android/app/.cxx/Debug/64503s5h/x86_64/CMakeFiles/rebuild_cache.dir
