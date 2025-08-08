@@ -14,4 +14,9 @@ class AppTextStyles {
     fontSize: 16,
     fontWeight: FontWeight.bold,
   );
+
+  static const TextStyle appBar = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+  );
 }

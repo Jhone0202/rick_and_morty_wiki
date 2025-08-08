@@ -16,7 +16,7 @@ class AppTheme {
         ),
         appBarTheme: AppBarTheme(
           elevation: 0,
-          titleTextStyle: AppTextStyles.bodyBold.apply(
+          titleTextStyle: AppTextStyles.appBar.copyWith(
             color: AppColors.content,
           ),
         ),

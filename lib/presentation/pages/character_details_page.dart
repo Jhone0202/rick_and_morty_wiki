@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:rick_and_morty_wiki/data/models/character_model.dart';
+import 'package:rick_and_morty_wiki/presentation/components/character_species_chip.dart';
+import 'package:rick_and_morty_wiki/presentation/components/character_status_chip.dart';
 
 class CharacterDetailsPage extends StatelessWidget {
   const CharacterDetailsPage({
@@ -19,25 +21,33 @@ class CharacterDetailsPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           AspectRatio(
             aspectRatio: 1,
-            child: Image.network(character.image, fit: BoxFit.cover),
+            child: Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Image.network(character.image, fit: BoxFit.cover),
+            ),
           ),
-          Text(
-            character.name,
-            style: Theme.of(context).textTheme.headlineLarge,
-            textAlign: TextAlign.center,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Text(
+              character.name,
+              style: Theme.of(context).textTheme.headlineLarge,
+              textAlign: TextAlign.center,
+            ),
           ),
-          Text(
-            character.status,
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          Text(
-            character.species,
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CharacterStatusChip(status: character.status),
+              const SizedBox(width: 8),
+              CharacterSpeciesChip(species: character.species),
+            ],
           ),
         ],
       ),
