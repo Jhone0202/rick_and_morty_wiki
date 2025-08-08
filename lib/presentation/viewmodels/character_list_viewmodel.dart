@@ -24,7 +24,7 @@ abstract class ICharacterListViewModel with Store {
   String errorMessage = '';
 
   @observable
-  int currentPage = 1;
+  int nextPage = 1;
 
   @observable
   bool hasMore = true;
@@ -33,7 +33,7 @@ abstract class ICharacterListViewModel with Store {
   Future loadCharacters({String search = '', bool reset = false}) async {
     try {
       if (reset) {
-        currentPage = 1;
+        nextPage = 1;
         characters.clear();
         hasMore = true;
       }
@@ -45,14 +45,14 @@ abstract class ICharacterListViewModel with Store {
 
       final newCharacters = await repository.getCharacters(
         search: search,
-        page: currentPage,
+        page: nextPage,
       );
 
       if (newCharacters.isEmpty) {
         hasMore = false;
       } else {
         characters.addAll(newCharacters);
-        currentPage++;
+        nextPage++;
       }
     } catch (e) {
       errorMessage = e.toString();
