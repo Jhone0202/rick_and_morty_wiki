@@ -4,8 +4,15 @@ import 'package:rick_and_morty_wiki/data/repositories/character_repository_inter
 
 class CharacterRepositoryHttp implements ICharacterRepository {
   @override
-  Future<List<CharacterModel>> getCharacters() async {
-    final res = await HttpClient.rickapi.get('/character?page=1');
+  Future<List<CharacterModel>> getCharacters({String search = ''}) async {
+    final queryParams = {
+      if (search.isNotEmpty) 'name': search,
+    };
+
+    final res = await HttpClient.rickapi.get(
+      '/character?page=1',
+      queryParameters: queryParams,
+    );
 
     if (res.statusCode != 200) {
       throw Exception('Erro ao buscar personagens');

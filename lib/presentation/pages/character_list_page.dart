@@ -15,55 +15,77 @@ class CharacterListPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Personagens'),
       ),
-      body: Observer(builder: (context) {
-        if (viewModel.isLoading) {
-          return const Center(
-            child: SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 1),
-            ),
-          );
-        }
-
-        if (viewModel.errorMessage.isNotEmpty) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                viewModel.errorMessage,
-                textAlign: TextAlign.center,
-              ),
-              TextButton(
-                onPressed: viewModel.loadCharacters,
-                child: const Text('Tentar novamente'),
-              ),
-            ],
-          );
-        }
-
-        return RefreshIndicator(
+      body: Observer(
+        builder: (context) => RefreshIndicator(
           onRefresh: viewModel.loadCharacters,
-          child: ListView.builder(
-            itemCount: viewModel.characters.length,
-            itemBuilder: (context, index) {
-              final character = viewModel.characters[index];
-              return ListTile(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CharacterDetailsPage(character: character),
+          child: Column(
+            children: [
+              SearchBar(
+                controller: viewModel.searchController,
+                onSubmitted: (_) => viewModel.loadCharacters(),
+                elevation: WidgetStateProperty.all(0.0),
+                hintText: 'Pesquisar personagem',
+                leading: const Icon(Icons.search),
+                trailing: [
+                  if (viewModel.searchController.text.isNotEmpty)
+                    IconButton(
+                      onPressed: () {
+                        viewModel.searchController.clear();
+                        viewModel.loadCharacters();
+                      },
+                      icon: Icon(Icons.close),
+                    ),
+                ],
+              ),
+              if (viewModel.isLoading)
+                const Center(
+                  child: SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 1),
+                  ),
+                )
+              else if (viewModel.errorMessage.isNotEmpty)
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      viewModel.errorMessage,
+                      textAlign: TextAlign.center,
+                    ),
+                    TextButton(
+                      onPressed: viewModel.loadCharacters,
+                      child: const Text('Tentar novamente'),
+                    ),
+                  ],
+                )
+              else
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: viewModel.characters.length,
+                    itemBuilder: (context, index) {
+                      final character = viewModel.characters[index];
+                      return ListTile(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CharacterDetailsPage(
+                              character: character,
+                            ),
+                          ),
+                        ),
+                        title: Text(character.name),
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(character.image),
+                        ),
+                      );
+                    },
                   ),
                 ),
-                title: Text(character.name),
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(character.image),
-                ),
-              );
-            },
+            ],
           ),
-        );
-      }),
+        ),
+      ),
     );
   }
 }
