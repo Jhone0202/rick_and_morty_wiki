@@ -33,7 +33,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        viewModel.loadCharacters();
+        viewModel.loadCharacters(search: searchController.text);
       }
     });
   }
