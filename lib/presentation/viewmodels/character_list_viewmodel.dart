@@ -15,7 +15,7 @@ abstract class ICharacterListViewModel with Store {
   }
 
   @observable
-  List<CharacterModel> characters = [];
+  ObservableList<CharacterModel> characters = ObservableList();
 
   @observable
   bool isLoading = false;
@@ -23,14 +23,40 @@ abstract class ICharacterListViewModel with Store {
   @observable
   String errorMessage = '';
 
+  @observable
+  int currentPage = 1;
+
+  @observable
+  bool hasMore = true;
+
   @action
-  Future loadCharacters({String search = ''}) async {
+  Future loadCharacters({String search = '', bool reset = false}) async {
     try {
+      if (reset) {
+        currentPage = 1;
+        characters.clear();
+        hasMore = true;
+      }
+
+      if (!hasMore || isLoading) return;
+
       isLoading = true;
       errorMessage = '';
-      characters = await repository.getCharacters(search: search);
+
+      final newCharacters = await repository.getCharacters(
+        search: search,
+        page: currentPage,
+      );
+
+      if (newCharacters.isEmpty) {
+        hasMore = false;
+      } else {
+        characters.addAll(newCharacters);
+        currentPage++;
+      }
     } catch (e) {
       errorMessage = e.toString();
+      hasMore = false;
     } finally {
       isLoading = false;
     }

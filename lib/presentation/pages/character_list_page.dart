@@ -12,6 +12,7 @@ class CharacterListPage extends StatefulWidget {
 }
 
 class _CharacterListPageState extends State<CharacterListPage> {
+  final scrollController = ScrollController();
   final searchController = TextEditingController();
   late CharacterListViewModel viewModel;
 
@@ -19,12 +20,22 @@ class _CharacterListPageState extends State<CharacterListPage> {
   void initState() {
     super.initState();
     viewModel = Provider.of<CharacterListViewModel>(context, listen: false);
+    _initScrollListener();
   }
 
   @override
   void dispose() {
     searchController.dispose();
     super.dispose();
+  }
+
+  void _initScrollListener() {
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        viewModel.loadCharacters();
+      }
+    });
   }
 
   @override
@@ -35,13 +46,14 @@ class _CharacterListPageState extends State<CharacterListPage> {
       ),
       body: Observer(
         builder: (context) => RefreshIndicator(
-          onRefresh: viewModel.loadCharacters,
+          onRefresh: () => viewModel.loadCharacters(reset: true),
           child: Column(
             children: [
               SearchBar(
                 controller: searchController,
                 onSubmitted: (_) => viewModel.loadCharacters(
                   search: searchController.text,
+                  reset: true,
                 ),
                 elevation: WidgetStateProperty.all(0.0),
                 hintText: 'Pesquisar personagem',
@@ -51,13 +63,13 @@ class _CharacterListPageState extends State<CharacterListPage> {
                     IconButton(
                       onPressed: () {
                         searchController.clear();
-                        viewModel.loadCharacters();
+                        viewModel.loadCharacters(reset: true);
                       },
                       icon: Icon(Icons.close),
                     ),
                 ],
               ),
-              if (viewModel.isLoading)
+              if (viewModel.isLoading && viewModel.characters.isEmpty)
                 Expanded(
                   child: const Center(
                     child: SizedBox(
@@ -84,6 +96,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
               else
                 Expanded(
                   child: ListView.builder(
+                    controller: scrollController,
                     itemCount: viewModel.characters.length,
                     itemBuilder: (context, index) {
                       final character = viewModel.characters[index];
@@ -102,6 +115,17 @@ class _CharacterListPageState extends State<CharacterListPage> {
                         ),
                       );
                     },
+                  ),
+                ),
+              if (viewModel.isLoading && viewModel.characters.isNotEmpty)
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 1),
+                    ),
                   ),
                 ),
             ],

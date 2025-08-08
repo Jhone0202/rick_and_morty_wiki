@@ -4,13 +4,17 @@ import 'package:rick_and_morty_wiki/data/repositories/character_repository_inter
 
 class CharacterRepositoryHttp implements ICharacterRepository {
   @override
-  Future<List<CharacterModel>> getCharacters({String search = ''}) async {
+  Future<List<CharacterModel>> getCharacters({
+    String search = '',
+    int page = 1,
+  }) async {
     final queryParams = {
+      'page': '$page',
       if (search.isNotEmpty) 'name': search,
     };
 
     final res = await HttpClient.rickapi.get(
-      '/character?page=1',
+      '/character',
       queryParameters: queryParams,
     );
 
