@@ -41,94 +41,116 @@ class _CharacterListPageState extends State<CharacterListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Personagens'),
-      ),
-      body: Observer(
-        builder: (context) => RefreshIndicator(
-          onRefresh: () => viewModel.loadCharacters(reset: true),
-          child: Column(
-            children: [
-              SearchBar(
-                controller: searchController,
-                onSubmitted: (_) => viewModel.loadCharacters(
-                  search: searchController.text,
-                  reset: true,
-                ),
-                elevation: WidgetStateProperty.all(0.0),
-                hintText: 'Pesquisar personagem',
-                leading: const Icon(Icons.search),
-                trailing: [
-                  if (searchController.text.isNotEmpty)
-                    IconButton(
-                      onPressed: () {
-                        searchController.clear();
-                        viewModel.loadCharacters(reset: true);
-                      },
-                      icon: Icon(Icons.close),
-                    ),
-                ],
-              ),
-              if (viewModel.isLoading && viewModel.characters.isEmpty)
-                Expanded(
-                  child: const Center(
-                    child: SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 1),
-                    ),
+      body: SafeArea(
+        child: Observer(
+          builder: (context) => RefreshIndicator(
+            onRefresh: () => viewModel.loadCharacters(reset: true),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Rick and Morty Wiki',
+                        style: Theme.of(context).textTheme.headlineLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        'Encontre seu personagem favorito usando a Rick and Morty API',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
-                )
-              else if (viewModel.errorMessage.isNotEmpty)
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      viewModel.errorMessage,
-                      textAlign: TextAlign.center,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SearchBar(
+                    controller: searchController,
+                    onSubmitted: (_) => viewModel.loadCharacters(
+                      search: searchController.text,
+                      reset: true,
                     ),
-                    TextButton(
-                      onPressed: viewModel.loadCharacters,
-                      child: const Text('Tentar novamente'),
+                    padding: WidgetStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
-                  ],
-                )
-              else
-                Expanded(
-                  child: ListView.builder(
-                    controller: scrollController,
-                    itemCount: viewModel.characters.length,
-                    itemBuilder: (context, index) {
-                      final character = viewModel.characters[index];
-                      return ListTile(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => CharacterDetailsPage(
-                              character: character,
+                    elevation: WidgetStateProperty.all(0.0),
+                    hintText: 'Pesquisar personagem',
+                    leading: const Icon(Icons.search),
+                    trailing: [
+                      if (searchController.text.isNotEmpty)
+                        IconButton(
+                          onPressed: () {
+                            searchController.clear();
+                            viewModel.loadCharacters(reset: true);
+                          },
+                          icon: Icon(Icons.close),
+                        ),
+                    ],
+                  ),
+                ),
+                if (viewModel.isLoading && viewModel.characters.isEmpty)
+                  Expanded(
+                    child: const Center(
+                      child: SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 1),
+                      ),
+                    ),
+                  )
+                else if (viewModel.errorMessage.isNotEmpty)
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        viewModel.errorMessage,
+                        textAlign: TextAlign.center,
+                      ),
+                      TextButton(
+                        onPressed: viewModel.loadCharacters,
+                        child: const Text('Tentar novamente'),
+                      ),
+                    ],
+                  )
+                else
+                  Expanded(
+                    child: ListView.builder(
+                      controller: scrollController,
+                      itemCount: viewModel.characters.length,
+                      itemBuilder: (context, index) {
+                        final character = viewModel.characters[index];
+                        return ListTile(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CharacterDetailsPage(
+                                character: character,
+                              ),
                             ),
                           ),
-                        ),
-                        title: Text(character.name),
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(character.image),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              if (viewModel.isLoading && viewModel.characters.isNotEmpty)
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child: SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 1),
+                          title: Text(character.name),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(character.image),
+                          ),
+                        );
+                      },
                     ),
                   ),
-                ),
-            ],
+                if (viewModel.isLoading && viewModel.characters.isNotEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 1),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
