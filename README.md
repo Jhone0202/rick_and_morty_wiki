@@ -49,9 +49,13 @@ flutter run
 
 ## Testes
 
-O foco dos testes foi validar o funcionamento do repositório responsável por consumir os dados da API, garantindo que os dados retornados estejam no formato esperado.
+O projeto conta com testes unitários que cobrem os principais pontos da lógica de negócio:
 
-Para rodar os testes, execute o seguinte comando no terminal:
+- Repositório (CharacterRepositoryHttp): garante que os dados consumidos da API estejam no formato correto.
+- ViewModel (CharacterListViewModel): valida o controle de estado, paginação, tratamento de erro e carregamento.
+- Mocktail: utilizado para simular dependências e garantir testes isolados e confiáveis.
+
+### Para rodar os testes, execute o seguinte comando no terminal:
 
 ```sh
 flutter test
@@ -64,6 +68,7 @@ flutter test
 - Adicionar **suporte à localização/tradução** (alguns textos estão em inglês e outros em português)
 - Criar **mais testes**, incluindo:
   - Testes de Widget (comportamento da UI)
+  - Tested de Integração (comportamento geral do APP)
 
 ## Autor
 
