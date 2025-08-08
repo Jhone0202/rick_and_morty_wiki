@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       create: (_) => CharacterListViewModel(CharacterRepositoryHttp()),
       child: MaterialApp(
         title: 'Rick and Morty Wiki',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

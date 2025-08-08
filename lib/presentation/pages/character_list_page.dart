@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:rick_and_morty_wiki/presentation/pages/character_details_page.dart';
 import 'package:rick_and_morty_wiki/presentation/viewmodels/character_list_viewmodel.dart';
 
 class CharacterListPage extends StatelessWidget {
@@ -41,19 +42,26 @@ class CharacterListPage extends StatelessWidget {
           );
         }
 
-        return ListView.builder(
-          itemCount: viewModel.characters.length,
-          itemBuilder: (context, index) {
-            final character = viewModel.characters[index];
-            return ListTile(
-              onTap: () {},
-              title: Text(character.name),
-              subtitle: Text('${character.species} - ${character.gender}'),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(character.image),
-              ),
-            );
-          },
+        return RefreshIndicator(
+          onRefresh: viewModel.loadCharacters,
+          child: ListView.builder(
+            itemCount: viewModel.characters.length,
+            itemBuilder: (context, index) {
+              final character = viewModel.characters[index];
+              return ListTile(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CharacterDetailsPage(character: character),
+                  ),
+                ),
+                title: Text(character.name),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(character.image),
+                ),
+              );
+            },
+          ),
         );
       }),
     );

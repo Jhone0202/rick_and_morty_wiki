@@ -3,11 +3,9 @@ import 'package:rick_and_morty_wiki/data/models/character_model.dart';
 import 'package:rick_and_morty_wiki/data/repositories/character_repository_interface.dart';
 
 class CharacterRepositoryHttp implements ICharacterRepository {
-  final _baseUrl = 'https://rickandmortyapi.com/api/character';
-
   @override
   Future<List<CharacterModel>> getCharacters() async {
-    final res = await HttpClient.client.get(_baseUrl);
+    final res = await HttpClient.rickapi.get('/character?page=1');
 
     if (res.statusCode != 200) {
       throw Exception('Erro ao buscar personagens');
