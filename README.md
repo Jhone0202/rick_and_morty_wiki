@@ -63,7 +63,6 @@ flutter test
 - Tornar a lista de personagens **mais intuitiva ao rolar**, aproveitando melhor o espaço da tela
 - Adicionar **suporte à localização/tradução** (alguns textos estão em inglês e outros em português)
 - Criar **mais testes**, incluindo:
-  - Testes de ViewModel (lógica de estado)
   - Testes de Widget (comportamento da UI)
 
 ## Autor
