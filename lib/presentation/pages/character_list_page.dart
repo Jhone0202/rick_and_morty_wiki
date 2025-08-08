@@ -4,13 +4,31 @@ import 'package:provider/provider.dart';
 import 'package:rick_and_morty_wiki/presentation/pages/character_details_page.dart';
 import 'package:rick_and_morty_wiki/presentation/viewmodels/character_list_viewmodel.dart';
 
-class CharacterListPage extends StatelessWidget {
+class CharacterListPage extends StatefulWidget {
   const CharacterListPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final viewModel = Provider.of<CharacterListViewModel>(context);
+  State<CharacterListPage> createState() => _CharacterListPageState();
+}
 
+class _CharacterListPageState extends State<CharacterListPage> {
+  final searchController = TextEditingController();
+  late CharacterListViewModel viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = Provider.of<CharacterListViewModel>(context, listen: false);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Personagens'),
@@ -21,16 +39,18 @@ class CharacterListPage extends StatelessWidget {
           child: Column(
             children: [
               SearchBar(
-                controller: viewModel.searchController,
-                onSubmitted: (_) => viewModel.loadCharacters(),
+                controller: searchController,
+                onSubmitted: (_) => viewModel.loadCharacters(
+                  search: searchController.text,
+                ),
                 elevation: WidgetStateProperty.all(0.0),
                 hintText: 'Pesquisar personagem',
                 leading: const Icon(Icons.search),
                 trailing: [
-                  if (viewModel.searchController.text.isNotEmpty)
+                  if (searchController.text.isNotEmpty)
                     IconButton(
                       onPressed: () {
-                        viewModel.searchController.clear();
+                        searchController.clear();
                         viewModel.loadCharacters();
                       },
                       icon: Icon(Icons.close),
@@ -38,11 +58,13 @@ class CharacterListPage extends StatelessWidget {
                 ],
               ),
               if (viewModel.isLoading)
-                const Center(
-                  child: SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 1),
+                Expanded(
+                  child: const Center(
+                    child: SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 1),
+                    ),
                   ),
                 )
               else if (viewModel.errorMessage.isNotEmpty)

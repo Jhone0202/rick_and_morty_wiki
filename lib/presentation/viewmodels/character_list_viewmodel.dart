@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:rick_and_morty_wiki/data/models/character_model.dart';
 import 'package:rick_and_morty_wiki/data/repositories/character_repository_interface.dart';
@@ -24,17 +23,12 @@ abstract class ICharacterListViewModel with Store {
   @observable
   String errorMessage = '';
 
-  @observable
-  TextEditingController searchController = TextEditingController();
-
   @action
-  Future loadCharacters() async {
+  Future loadCharacters({String search = ''}) async {
     try {
       isLoading = true;
       errorMessage = '';
-      characters = await repository.getCharacters(
-        search: searchController.text,
-      );
+      characters = await repository.getCharacters(search: search);
     } catch (e) {
       errorMessage = e.toString();
     } finally {
