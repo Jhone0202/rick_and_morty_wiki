@@ -7,12 +7,18 @@ class AppTheme {
   static ThemeData get lightTheme => ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
-        appBarTheme: const AppBarTheme(elevation: 0),
         textTheme: GoogleFonts.montserratTextTheme(TextTheme(
           headlineLarge: AppTextStyles.title,
           bodyMedium: AppTextStyles.body,
+          bodyLarge: AppTextStyles.bodyBold,
         )).apply(
           bodyColor: AppColors.content,
+        ),
+        appBarTheme: AppBarTheme(
+          elevation: 0,
+          titleTextStyle: AppTextStyles.bodyBold.apply(
+            color: AppColors.content,
+          ),
         ),
       );
 }

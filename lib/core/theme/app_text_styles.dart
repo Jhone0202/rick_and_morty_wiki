@@ -9,4 +9,9 @@ class AppTextStyles {
   static const TextStyle body = TextStyle(
     fontSize: 16,
   );
+
+  static const TextStyle bodyBold = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
 }

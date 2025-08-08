@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:rick_and_morty_wiki/core/theme/app_colors.dart';
 import 'package:rick_and_morty_wiki/presentation/pages/character_details_page.dart';
 import 'package:rick_and_morty_wiki/presentation/viewmodels/character_list_viewmodel.dart';
 
@@ -48,7 +49,10 @@ class _CharacterListPageState extends State<CharacterListPage> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 24,
+                  ),
                   child: Column(
                     children: [
                       Text(
@@ -77,7 +81,18 @@ class _CharacterListPageState extends State<CharacterListPage> {
                     ),
                     elevation: WidgetStateProperty.all(0.0),
                     hintText: 'Pesquisar personagem',
-                    leading: const Icon(Icons.search),
+                    leading: const Icon(
+                      Icons.search,
+                      color: AppColors.secondary,
+                    ),
+                    backgroundColor: WidgetStatePropertyAll(
+                      AppColors.backgroundSearch,
+                    ),
+                    textStyle: WidgetStateProperty.all(
+                      Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.secondary,
+                          ),
+                    ),
                     trailing: [
                       if (searchController.text.isNotEmpty)
                         IconButton(
@@ -116,12 +131,20 @@ class _CharacterListPageState extends State<CharacterListPage> {
                   )
                 else
                   Expanded(
-                    child: ListView.builder(
+                    child: GridView.builder(
                       controller: scrollController,
+                      padding: const EdgeInsets.all(16),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 0.9,
+                      ),
                       itemCount: viewModel.characters.length,
                       itemBuilder: (context, index) {
                         final character = viewModel.characters[index];
-                        return ListTile(
+                        return InkWell(
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -130,9 +153,47 @@ class _CharacterListPageState extends State<CharacterListPage> {
                               ),
                             ),
                           ),
-                          title: Text(character.name),
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(character.image),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  maxRadius: 64,
+                                  backgroundImage:
+                                      NetworkImage(character.image),
+                                ),
+                                Text(
+                                  character.name,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Detalhes ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: AppColors.secondary,
+                                          ),
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward,
+                                      size: 12,
+                                      color: AppColors.secondary,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

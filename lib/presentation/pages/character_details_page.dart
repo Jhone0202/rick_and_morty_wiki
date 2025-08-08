@@ -24,9 +24,21 @@ class CharacterDetailsPage extends StatelessWidget {
             aspectRatio: 1,
             child: Image.network(character.image, fit: BoxFit.cover),
           ),
-          Text(character.name),
-          Text(character.status),
-          Text(character.species),
+          Text(
+            character.name,
+            style: Theme.of(context).textTheme.headlineLarge,
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            character.status,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            character.species,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
